@@ -36,28 +36,18 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-<<<<<<< HEAD
-         //Allow webhooks
+        // Allow public routes
         if (request.getRequestURI().contains("/webhooks") ||
                 request.getRequestURI().contains("/public") ||
-                 request.getRequestURI().contains("/download") ) {
-=======
-        // Allow webhooks   //|| request.getRequestURI().contains("/public") || request.getRequestURI().contains("/download")
-        if (request.getRequestURI().contains("/webhooks") || request.getRequestURI().contains("/public") || request.getRequestURI().contains("/download") ) {
->>>>>>> a94f758329a61db60e58e18c8fca65169e98e97b
+                request.getRequestURI().contains("/download")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String authHeader = request.getHeader("Authorization");
 
-
-<<<<<<< HEAD
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-=======
-         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
->>>>>>> a94f758329a61db60e58e18c8fca65169e98e97b
-            filterChain.doFilter(request, response);//
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -83,7 +73,6 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
 
             PublicKey publicKey = jwksProvider.getPublicKey(kid);
 
-
             Claims claims = Jwts.parser()
                     .setSigningKey(publicKey)
                     .setAllowedClockSkewSeconds(60)
@@ -106,9 +95,7 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token"+e.getMessage());
-            return;
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token " + e.getMessage());
         }
-
     }
 }
